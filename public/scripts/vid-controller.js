@@ -1,5 +1,5 @@
 // FLIE NAME HERE
-var AllFiles = ['output']
+var AllFiles = ['segment-loop']
 
 window.onload = function() {
 	init();
@@ -17,47 +17,42 @@ function init(){
 	results.then(data => {
 	
 		var video = document.getElementById("video-panel");
+   
+         // Initial values
+		var vidIndex = 0;
+        
+		var _videos = data['0']['videos'];
+        var _videoSentenceData = _videos[vidIndex]["sentences"][0]["segments"][0];
 
+        var totalVideos = _videos.length;
+        
+        var vidStartTime = _videoSentenceData["start_time"];
+        var vidEndTime = _videoSentenceData["end_time"];
 
-		var sentenceData = data['0']['sentences'];
-		var lastSentence = sentenceData[sentenceData.length - 1]
-		var lastSentenceSegments = lastSentence["segments"]
-
-		var vidStartTime = 0
-		var vidEndTime = lastSentenceSegments[lastSentenceSegments.length - 1]["end_time"];
+        var timeToStop = vidEndTime
+        
+        video.src = "video-footage/" + _videos[0]["video_name"];
+        video.currentTime = vidStartTime;
+       
 		
-		var sentIndex = 0;
-		var segmentIndex = 0;
 
+        $(".segment-cont").html(_videoSentenceData["grams"].join(" "))
 		
-		timeToStop = sentenceData[sentIndex]["segments"][segmentIndex]["end_time"]
-
-		FILENAME = AllFiles[0];
-		var VIDEO_FILE = "video-footage/" + FILENAME + ".mov";
-		var segmentLength = sentenceData[sentIndex]["segments"].length;
-
-		console.log(sentenceData[sentIndex])
-
-		video.addEventListener("timeupdate", function () {	
-			if (this.currentTime >= timeToStop) {
-				segmentIndex++;
-				if(segmentIndex > segmentLength -1){
-					sentIndex++;
-					segmentIndex = 0
-					segmentLength = sentenceData[sentIndex]["segments"].length;
-					console.log(sentenceData[sentIndex])
-				}
-				timeToStop = sentenceData[sentIndex]["segments"][segmentIndex]["end_time"]
-				this.currentTime = sentenceData[sentIndex]["segments"][segmentIndex]["start_time"]
-
-				gramText = sentenceData[sentIndex]["segments"][segmentIndex]["grams"].join(" ")
-				$('.segment-cont').html(gramText)
-
-				console.log("START_TIME:",sentenceData[sentIndex]["segments"][segmentIndex]["start_time"], "END_TIME:",timeToStop)
-
+		
+		video.addEventListener("timeupdate", function () {
+			if (this.currentTime >= timeToStop) {   
+                vidIndex++;
+                if(vidIndex < totalVideos){
+                    var currentSegmentData = _videos[vidIndex]["sentences"]["0"]["segments"]["0"];
+                    video.src = "video-footage/" + _videos[vidIndex]["video_name"];
+                    video.currentTime = currentSegmentData["start_time"];
+                    timeToStop = currentSegmentData["end_time"];
+                    $(".segment-cont").html(currentSegmentData["grams"].join(" "))
+                }else{
+                    vidIndex=0
+                }
 			}
-		}, false);
-		
+		}, false);	
 	});
 }
 
