@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Interactive Transcript</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script
+    src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <h1>
+        N - Gram Video 
+      </h1>
+      <video id="video-panel" width="500" controls autoplay>
+        <source src="video-footage/chronos.mov" controls>
+        Your browser does not support the video tag.
+      </video>
+      <div class="interactive-transcript-cont"></div>
+      <h2 class="segment-cont"></h2>
+      <script src="scripts/vid-controller.js" type="text/javascript"></script>
+    </div>
+  </body>
+</html>
